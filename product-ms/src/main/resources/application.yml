@@ -1,0 +1,19 @@
+server:
+  port: 8082
+spring:
+  application:
+    name: Product Microservice
+  datasource:
+    driverClassName: org.h2.Driver
+    password: password
+    url: jdbc:h2:mem:productdb
+    username: sa
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create
+  sleuth:
+    sampler:
+      probability: 1.0
+  zipkin:
+    base-url: localhost:9411
