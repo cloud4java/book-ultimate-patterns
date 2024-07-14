@@ -31,7 +31,7 @@ public class OrderService {
 
         Order order = repository.findById(id).orElseThrow();
         ClientDto clientDto = clientClient.getClientById(order.getClientId());
-        ProductDto productDto = productClient.findById(id);
+        ProductDto productDto = productClient.findById(order.getProductId());
 
         return new OrderResponse(id, clientDto.getName(), productDto.getName(), productDto.getPrice());
     }
