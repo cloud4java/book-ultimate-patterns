@@ -33,7 +33,7 @@ public class OrderService {
         ClientDto clientDto = clientClient.getClientById(order.getClientId());
         ProductDto productDto = productClient.findById(order.getProductId());
 
-        return new OrderResponse(id, clientDto.getName(), productDto.getName(), productDto.getPrice());
+        return new OrderResponse( clientDto.getName(),id, productDto.getName(), productDto.getPrice());
     }
 
     public OrderResponse save(OrderRequest orderRequest) {

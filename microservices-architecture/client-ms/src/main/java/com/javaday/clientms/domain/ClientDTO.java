@@ -1,8 +1,5 @@
 package com.javaday.clientms.domain;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 public class ClientDTO {
     private String name;
     private String sureName;
@@ -24,10 +21,5 @@ public class ClientDTO {
 
     public String getEmail() {
         return email;
-    }
-
-    public String toJson() throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        return objectMapper.writeValueAsString(this);
     }
 }

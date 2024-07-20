@@ -3,7 +3,6 @@ package com.javaday.clientms.service;
 import com.javaday.clientms.domain.Client;
 import com.javaday.clientms.domain.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,16 +22,6 @@ public class ClientService {
 
     public Client save(Client client) {
         Client savedClient = repository.save(client);
-//        this.sendClientToKafka(savedClient);
         return savedClient;
     }
-
-    @Autowired
-    private KafkaTemplate<String, String> kafkaTemplate;
-
-    public void sendClientToKafka(Client client) {
-        String clientJson = client.toJson();
-        kafkaTemplate.send("client-topic", clientJson);
-    }
-
 }

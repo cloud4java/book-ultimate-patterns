@@ -29,15 +29,6 @@ public class OrderController {
         return ResponseEntity.ok(response);
     }
 
-/*    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<OrderResponse> create(@RequestBody OrderRequest orderRequest){
-        Order orderEntity = new Order();
-        orderEntity.setClientId(orderRequest.getClientId());
-        orderEntity.setProductId(orderRequest.getProductId());
-        Order order = repository.save(orderEntity);
-        return  ResponseEntity.ok(this.retrieveById(order.getId()));
-    }*/
-
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<OrderResponse> findById(@PathVariable Long id) {
         OrderResponse orderResponse = orderService.getById(id);
@@ -47,13 +38,6 @@ public class OrderController {
     @GetMapping
     private List<Order> getAll() {
         return orderService.getAll();
-    }
-
-    private OrderResponse retrieveById(final Long id) {
-
-        ProductDto productDto = productClient.findById(id);
-
-        return new OrderResponse(id, "Fix Client Name", productDto.getName(), productDto.getPrice());
     }
 
 }
