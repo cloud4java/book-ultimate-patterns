@@ -1,5 +1,6 @@
 #spring.jackson.serialization.FAIL_ON_EMPTY_BEANS=false
-
+server:
+  port: 8082
 
 spring:
   jackson:
@@ -7,13 +8,20 @@ spring:
       FAIL_ON_EMPTY_BEANS: false
   application:
     name: resilient-bookstore
-resilience4j.ratelimiter:
+resilience4j:
+  ratelimiter:
     instances:
-        bookStoreLimiter:
-          registerHealthIndicator: true
-          limitForPeriod: 2
-          limitRefreshPeriod: 20s
-          timeoutDuration: 0
-server:
-  port: 8082
+      bookStoreLimiter:
+        registerHealthIndicator: true
+        limitForPeriod: 2
+        limitRefreshPeriod: 20s
+        timeoutDuration: 0
+  bulkhead:
+    instances:
+      bookstoreBulkhead:
+        maxWaitDuration: 0ms
+        maxConcurrentCalls: 1
+logging:
+  level:
+    root: info
 
