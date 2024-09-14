@@ -1,27 +1,57 @@
-#spring.jackson.serialization.FAIL_ON_EMPTY_BEANS=false
-server:
-  port: 8082
-
-spring:
-  jackson:
-    serialization:
-      FAIL_ON_EMPTY_BEANS: false
-  application:
-    name: resilient-bookstore
+logging:
+  level:
+    root: INFO
+management:
+  endpoint:
+    health:
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  health:
+    circuitbreakers:
+      enabled: true
+    ratelimiters:
+      enabled: true
 resilience4j:
+  bulkhead:
+    instances:
+      bookStoreBulkhead:
+        maxConcurrentCalls: 2
+        maxWaitDuration: 0ms
+  configs:
+    default:
+      registerHealthIndicator: true
   ratelimiter:
     instances:
       bookStoreLimiter:
-        registerHealthIndicator: true
         limitForPeriod: 2
         limitRefreshPeriod: 20s
         timeoutDuration: 0
-  bulkhead:
+resilience4j.retry:
+  configs:
+    default:
+      enable-exponential-backoff: true
+      exponential-backoff-multiplier: 4
+      maxAttempts: 4
+      waitDuration: 500
+      retryExceptions:
+        - org.springframework.web.client.HttpServerErrorException
+        - java.util.concurrent.TimeoutException
+        - java.io.IOException
+      ignoreExceptions:
+        - com.silva.bookstore.exception.BusinessException
+  timelimiter:
     instances:
-      bookstoreBulkhead:
-        maxWaitDuration: 0ms
-        maxConcurrentCalls: 1
-logging:
-  level:
-    root: info
-
+      bookStoreTimeout:
+        cancelRunningFuture: true
+        timeoutDuration: 600ms
+server:
+  port: 8082
+spring:
+  application:
+    name: resilient-bookstore
+  jackson:
+    serialization:
+      FAIL_ON_EMPTY_BEANS: false

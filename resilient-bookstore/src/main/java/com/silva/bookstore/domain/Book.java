@@ -28,4 +28,14 @@ public class Book {
     public String getTitle() {
         return title;
     }
+
+    @Override
+    public String toString() {
+        return "Book{" +
+                "author='" + author + '\'' +
+                ", id=" + id +
+                ", title='" + title + '\'' +
+                ", price=" + price +
+                '}';
+    }
 }
