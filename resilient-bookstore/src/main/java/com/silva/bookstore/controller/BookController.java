@@ -3,6 +3,7 @@ package com.silva.bookstore.controller;
 import com.silva.bookstore.domain.Book;
 import com.silva.bookstore.service.BookService;
 import io.github.resilience4j.bulkhead.annotation.Bulkhead;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import io.github.resilience4j.retry.annotation.Retry;
 import io.github.resilience4j.timelimiter.annotation.TimeLimiter;
@@ -47,6 +48,12 @@ public class BookController {
         throw new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "ERROR Getting book by ID");
 
     }
+    @GetMapping("/{id}/authors")
+    @CircuitBreaker(name = "bookstoreBackend", fallbackMethod = "getAuthorsByBookById" )
+    public ResponseEntity<Object> getAuthorsByBookById(@PathVariable Long id) {
+        LOG.info("GERROR getting authors by  book by ID");
+        throw new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "ERROR Getting authors by  book by ID");
+    }
 
     @PutMapping("/{id}")
     @TimeLimiter(name = "bookStoreTimeout")
@@ -60,5 +67,9 @@ public class BookController {
                 //sleep skipped
             }
         }).thenApply( (result) -> new Book("Book Author 1", 1L, 127.99, "Book Title")) ;
+    }
+
+    public ResponseEntity<Object> getAuthorsByBookById(Long id, Exception e) {
+        return ResponseEntity.ok(new Book("BOOK AUTHOR FROM CACHE", 1L, 127.99, "BOOK TITLE FROM CACHE"));
     }
 }

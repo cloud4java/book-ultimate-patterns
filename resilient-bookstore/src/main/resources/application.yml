@@ -29,6 +29,18 @@ resilience4j:
         limitForPeriod: 2
         limitRefreshPeriod: 20s
         timeoutDuration: 0
+  circuitbreaker:
+    instances:
+      bookstoreBackend:
+        register-health-indicator: true
+        sliding-window-size: 10
+        minimum-number-of-calls: 3
+        permitted-number-of-calls-in-half-open-state: 2
+        wait-duration-in-open-state: 20s
+        failure-rate-threshold: 10
+        event-consumer-buffer-size: 10
+
+
 resilience4j.retry:
   configs:
     default:
