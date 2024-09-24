@@ -42,17 +42,8 @@ public class BookController {
     }
 
     @GetMapping("/{id}")
-    @Retry(name = "bookStoreRetry")
     public ResponseEntity<Object> getBookById(@PathVariable Long id) {
-        LOG.info("Getting book by ID");
-        throw new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "ERROR Getting book by ID");
-
-    }
-    @GetMapping("/{id}/authors")
-    @CircuitBreaker(name = "bookstoreBackend", fallbackMethod = "getAuthorsByBookById" )
-    public ResponseEntity<Object> getAuthorsByBookById(@PathVariable Long id) {
-        LOG.info("GERROR getting authors by  book by ID");
-        throw new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "ERROR Getting authors by  book by ID");
+        return ResponseEntity.ok(bookService.getBookById(id));
     }
 
     @PutMapping("/{id}")
@@ -67,6 +58,12 @@ public class BookController {
                 //sleep skipped
             }
         }).thenApply( (result) -> new Book("Book Author 1", 1L, 127.99, "Book Title")) ;
+    }
+    @GetMapping("/{id}/authors")
+    @CircuitBreaker(name = "bookstoreBackend", fallbackMethod = "getAuthorsByBookById" )
+    public ResponseEntity<Object> getAuthorsByBookById(@PathVariable Long id) {
+        LOG.info("GERROR getting authors by  book by ID");
+        throw new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "ERROR Getting authors by  book by ID");
     }
 
     public ResponseEntity<Object> getAuthorsByBookById(Long id, Exception e) {

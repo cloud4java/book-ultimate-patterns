@@ -3,7 +3,9 @@ package com.silva.bookstore.service;
 import com.silva.bookstore.domain.Book;
 import io.github.resilience4j.retry.annotation.Retry;
 import org.slf4j.Logger;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpServerErrorException;
 
 import java.util.Arrays;
 import java.util.List;
@@ -19,7 +21,9 @@ public class BookService {
 
     @Retry(name = "bookStoreRetry")
     public Book getBookById(Long id) {
-        return new Book("Book Author 1", 1L, 127.99, "Book Title");
+        LOG.info("Getting book by ID");
+        throw new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "ERROR Getting book by ID");
+//        return new Book("Book Author 1", 1L, 127.99, "Book Title");
     }
 
     public Book createBook(Book book) {
