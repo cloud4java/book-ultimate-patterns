@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+Suggested follow up questions:
+
+How can you handle versioning in consumer-driven contract testing?
+
+What are some best practices for maintaining contracts in a large microservices architecture?
+
+How can you integrate contract testing with a CI/CD pipeline?
+To create a contract test between two projects in the current directory, you can use consumer-driven contract testing. This approach is particularly useful for microservices architectures, where different services need to communicate with each other. Here's how you can set up contract tests between your two projects: [1]
+
+Choose a Contract Testing Framework: A popular choice for Java projects is Spring Cloud Contract. It integrates well with Spring Boot applications and supports both consumer and provider sides of the contract.
+
+Set Up the Provider Project: In the provider project (let's assume it's the order-service), you'll define the contracts.a. Add the necessary dependencies to your pom.xml:
+
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-contract-verifier</artifactId>
+    <scope>test</scope>
+</dependency>
+
+Copy
+
+Insert at cursor
+xml
+b. Create a contract file in src/test/resources/contracts/. For example, shouldReturnOrder.groovy:
+import org.springframework.cloud.contract.spec.Contract<p></p>
+
+Copy
+
+Insert at cursor
+groovy
+c. Create a base test class for your contracts:
+@RunWith(SpringRunner.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+public abstract class BaseContractTest {<p></p>
+<pre><code>@Autowired
+private OrderService orderService;
+
+@MockBean
+private OrderRepository orderRepository;
+
+@Before
+public void setup() {
+    RestAssuredMockMvc.standaloneSetup(new OrderController(orderService));
+
+    // Setup your mock data
+    when(orderRepository.findById(1L)).thenReturn(Optional.of(new Order(1L, 100L, 2, 29.99)));
+}
+</code></pre>
+
+Copy
+
+Insert at cursor
+java
+Set Up the Consumer Project: In the consumer project, you'll use the generated stubs from the provider.a. Add the necessary dependencies to your pom.xml:
+
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-contract-stub-runner</artifactId>
+    <scope>test</scope>
+</dependency>
+
+Copy
+
+Insert at cursor
+xml
+b. Create a test class that uses the stub:
+
+
+Copy
+
+Insert at cursor
+java
+@RunWith(SpringRunner.class)
+@SpringBootTest
+@AutoConfigureStubRunner(
+ids = {"com.javapatterns.observability:order-service:+:stubs"},
+stubsMode = StubRunnerProperties.StubsMode.LOCAL
+)
+public class OrderClientContractTest {
+
+@Autowired
+private OrderClient orderClient;
+
+@Test
+public void testGetOrder() {
+Order order = orderClient.getOrder(1L);
+assertThat(order.getId()).isEqualTo(1L);
+assertThat(order.getProductId()).isEqualTo(100L);
+assertThat(order.getQuantity()).isEqualTo(2);
+assertThat(order.getTotalPrice()).isEqualTo(29.99);
+}
+
+Copy
+
+Insert at cursor
+text
+}
+
+
+4. Run the Tests:
+- In the provider project, run `mvn clean install` to generate the stubs.
+- In the consumer project, run `mvn test` to execute the contract tests using the generated stubs.
+
+This setup ensures that the contract between your two projects is maintained. If either side makes changes that break the contract, the tests will fail, alerting you to potential integration issues early in the development process.
+
+Remember to keep your contracts up-to-date as your APIs evolve. Also, consider setting up a CI/CD pipeline that runs these contract tests automatically to catch any breaking changes early.
+
+Copy
+
+Insert at cursor
+text
+Sources
+[1] Android Unit Test within Project
+stackoverflow.comquestions11299088
+how to create a contract test between the 2 projects in the current directory
+
+Hi, I'm Amazon Q. I can answer your software development questions.
+Ask me to explain, debug, or optimize your code.
+You can enter / to see a list of quick actions. Add @workspace at the beginning of your message to enhance Q response with entire workspace files.
+
+
+Ask a question or enter "/" for quick commands
+
+4000/4000
+Use of Amazon Q is subject to the AWS Responsible AI Policy.
+</body>
+</html>
