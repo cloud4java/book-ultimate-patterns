@@ -1,6 +1,6 @@
 package com.javaday.orderms.domain;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "`order`")

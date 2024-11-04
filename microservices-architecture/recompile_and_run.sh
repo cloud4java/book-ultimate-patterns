@@ -13,7 +13,7 @@ echo "Starting recompilation and deployment process..."
 # Stop any running Docker containers
 echo "Stopping existing Docker containers..."
 docker-compose down
-
+#
 # Recompile each project using Maven
 echo "Recompiling projects with Maven..."
 for project in */pom.xml; do
@@ -24,7 +24,7 @@ done
 
 # Rebuild Docker images
 echo "Rebuilding Docker images..."
-docker-compose build
+#docker-compose build
 
 # Start the containers using docker-compose
 echo "Starting Docker containers..."
