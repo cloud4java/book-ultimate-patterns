@@ -7,7 +7,7 @@ import org.springframework.web.client.RestTemplate;
 
 @Component
 public class ClientClient {
-    @Value("${app.client.url:http://localhost:8081/client/}")
+    @Value("${app.client.url}")
     private String clientUrl;
 
     private RestTemplate restTemplate;

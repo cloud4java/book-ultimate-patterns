@@ -7,7 +7,7 @@ import org.springframework.web.client.RestTemplate;
 
 @Component
 public class ProductClient {
-    @Value("${app.product.url:http://localhost:8082/products/}")
+    @Value("${app.product.url}")
     private String productUrl;
     private RestTemplate  restTemplate;
 
