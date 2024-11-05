@@ -3,7 +3,7 @@
 # Script to recompile projects, rebuild Docker images, and run the updated version
 
 # Exit on any error
-set -e
+# set -e
 
 # Print commands before executing them
 set -x
