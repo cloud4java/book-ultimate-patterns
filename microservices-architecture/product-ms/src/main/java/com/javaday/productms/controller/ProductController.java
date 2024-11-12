@@ -36,6 +36,8 @@ public class ProductController {
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Product> findAll() {
+        LOGGER.info("Getting all products");
+
         return service.getAll();
     }
 
@@ -53,6 +55,7 @@ public class ProductController {
             Product p = prod.get();
             p.setName(product.getName());
             p.setName(product.getName());
+            LOGGER.info("Updating client to : {} id {}", p, id);
             Product saved = service.save(p);
             return new ResponseEntity(saved, HttpStatus.OK);
         } else {

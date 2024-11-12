@@ -20,3 +20,5 @@ management:
     sampling:
       probability: 1.0
 
+logging:
+  config: classpath:log4j-spring.xml

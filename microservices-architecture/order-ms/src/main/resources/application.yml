@@ -23,5 +23,6 @@ app:
     url: "http://localhost:8081/clients/"
   product:
     url: "http://localhost:8082/products/"
-
+logging:
+  config: classpath:log4j-spring.xml
 

@@ -23,7 +23,7 @@ export cmd
 for project in */pom.xml; do
     project_dir=$(dirname "$project")
     echo "Running $project_dir"
-     (cd "$project_dir" && java -jar "$project_dir-0.0.1-SNAPSHOT.jar" &  )
+     (cd "$project_dir" && mvn spring-boot:run -DskipTests &  )
 done
 
 ps aux | grep java
