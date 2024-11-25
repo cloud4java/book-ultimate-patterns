@@ -1,0 +1,30 @@
+<Configuration>
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+        </Console>
+        <SplunkHttp name="splunkhttp"
+                    url="http://localhost:8088"
+                    token="1f4d7fe1-79b1-430c-99a7-13a5063945f8"
+                    source="source name"
+                    sourcetype="_json"
+                    host="localhost"
+                    index="spring_dev"
+                    batch_size_count="1"
+                    disableCertificateValidation="true">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"/>
+        </SplunkHttp>
+    </Appenders>
+    <Loggers>
+        <Logger name="com" level="info" additivity="false">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="splunkhttp"/>
+        </Logger>
+        <Logger name="com.splunk.logging" level="debug" additivity="false">
+            <AppenderRef ref="Console"/>
+        </Logger>
+        <Root level="info">
+            <AppenderRef ref="splunkhttp"/>
+        </Root>
+    </Loggers>
+</Configuration>
