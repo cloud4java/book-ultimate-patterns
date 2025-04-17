@@ -1,0 +1,42 @@
+# ConfigMap: Stores the application.yml configuration for the Spring Boot app
+# - Contains all Spring Boot configuration settings
+# - Mounted into the container at /app/config/application.yml
+# - Configures H2 in-memory database
+# - Sets up actuator endpoints for health monitoring
+# - Defines server port and application name
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: healthcheck-config
+data:
+  application.yml: |
+    spring:
+      application:
+        name: healthcheck-example
+      datasource:
+        url: jdbc:h2:mem:testdb
+        username: sa
+        password: 
+        driver-class-name: org.h2.Driver
+      h2:
+        console:
+          enabled: true
+      jpa:
+        database-platform: org.hibernate.dialect.H2Dialect
+        hibernate:
+          ddl-auto: update
+        show-sql: true
+
+    management:
+      endpoint:
+        health:
+          enabled: true
+          show-details: always
+      endpoints:
+        web:
+          exposure:
+            include: health
+
+    server:
+      port: 8085

@@ -1,0 +1,51 @@
+spring:
+  application:
+    name: healthcheck-example
+
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect  # Explicitly set dialect
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update  # or your preferred option (create, create-drop, validate, none)
+    show-sql: true      # optional: to see SQL in logs
+
+#  datasource:
+#    username: postgres
+#    password: postgres
+#    url: jdbc:postgresql://localhost:5432/postgres
+#    driver-class-name: org.postgresql.Driver
+#    type: com.zaxxer.hikari.HikariDataSource
+#    hikari:
+#      connection-timeout: 20000
+#      maximum-pool-size: 5
+
+#  datasource:
+#    username: root
+#    password: root
+#    url: jdbc:mysql://localhost:3306/order_db
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+  datasource:
+    username: sa
+    password:
+    url: jdbc:h2:mem:testdb
+  h2:
+    console:
+      enabled: true
+
+management:
+  endpoint:
+    health:
+      enabled: true
+      show-details: always #never(default) when_authorized
+  endpoints:
+    web:
+      exposure:
+        include: health #,  info, env #, prometheus,   metrics
+
+
+server:
+  port: 8085
+
+

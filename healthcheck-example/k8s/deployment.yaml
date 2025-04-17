@@ -1,0 +1,70 @@
+# This file contains two Kubernetes resources:
+# 1. Deployment: Manages the Spring Boot application pods
+#    - Runs a single replica of the application
+#    - Mounts configuration from ConfigMap
+#    - Configures health checks via actuator endpoints
+#    - Uses local image 'healthcheck-example:latest'
+# 
+# 2. Service: Exposes the application to external traffic
+#    - Type LoadBalancer makes it accessible from outside the cluster
+#    - Maps port 80 to container port 8085
+#    - Selects pods with label 'app: healthcheck-app'
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: healthcheck-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: healthcheck-app
+  template:
+    metadata:
+      labels:
+        app: healthcheck-app
+    spec:
+      containers:
+        - name: healthcheck-app
+          image: healthcheck-example:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8085
+          volumeMounts:
+            - name: config-volume
+              mountPath: /app/config
+          env:
+            - name: SPRING_CONFIG_LOCATION
+              value: file:/app/config/application.yml
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8085
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8085
+            initialDelaySeconds: 30
+            periodSeconds: 10
+      volumes:
+        - name: config-volume
+          configMap:
+            name: healthcheck-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: healthcheck-service
+spec:
+  selector:
+    app: healthcheck-app
+  ports:
+    - port: 80
+      targetPort: 8085
+  type: NodePort
+  ports:
+    - port: 8085
+      targetPort: 8085
+      nodePort: 30085
