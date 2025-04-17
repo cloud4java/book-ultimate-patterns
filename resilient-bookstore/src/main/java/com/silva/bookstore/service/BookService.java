@@ -19,7 +19,6 @@ public class BookService {
         return Arrays.asList(new Book("Book Author 1", 1L, 127.99, "Book Title"));
     }
 
-    @Retry(name = "bookStoreRetry")
     public Book getBookById(Long id) {
         LOG.info("Getting book by ID");
         throw new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "ERROR Getting book by ID");

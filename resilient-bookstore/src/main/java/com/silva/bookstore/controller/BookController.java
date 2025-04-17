@@ -41,6 +41,7 @@ public class BookController {
         return bookService.createBook(book1);
     }
 
+    @Retry(name = "bookStoreRetry")
     @GetMapping("/{id}")
     public ResponseEntity<Object> getBookById(@PathVariable Long id) {
         return ResponseEntity.ok(bookService.getBookById(id));
