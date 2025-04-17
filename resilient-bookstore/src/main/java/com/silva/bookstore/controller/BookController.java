@@ -35,8 +35,9 @@ public class BookController {
 
     @PostMapping
     @Bulkhead(name = "bookStoreBulkhead")
-    public Book createBook(@RequestBody Book book) {
-        final Book book1 = new Book("Book Author 1_" + System.currentTimeMillis(), 1L, 127.99, "Book Title");
+    public Book createBook(@RequestBody Book book) throws InterruptedException {
+        final Book book1 = new Book("Book Author 1_" + System.currentTimeMillis(), System.currentTimeMillis(), 127.99, "Book Title");
+        TimeUnit.MILLISECONDS.sleep(500);
         LOG.info("Creating book " + book1);
         return bookService.createBook(book1);
     }
