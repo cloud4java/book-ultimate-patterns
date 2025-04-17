@@ -61,7 +61,7 @@ resilience4j.retry:
       ignoreExceptions:
         - com.silva.bookstore.exception.BusinessException
       fail-after-max-attempts: true
-  timelimiter:
+resilience4j.timelimiter:
     instances:
       bookStoreTimeout:
         cancelRunningFuture: true
