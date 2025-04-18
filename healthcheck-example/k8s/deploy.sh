@@ -16,6 +16,12 @@ if ! command -v kubectl &> /dev/null; then
     sudo mv kubectl /usr/local/bin/
 fi
 
+# Check for Docker Hub username
+if [ -z "$DOCKER_USERNAME" ]; then
+    echo "Please set DOCKER_USERNAME environment variable"
+    exit 1
+fi
+
 # Create Kind cluster if it doesn't exist
 if ! kind get clusters | grep -q "healthcheck-cluster"; then
     echo "Creating Kind cluster..."
@@ -24,13 +30,11 @@ else
     echo "Kind cluster already exists"
 fi
 
-# Build Docker image
-echo "Building Docker image..."
-docker build -t healthcheck-example:latest ..
-
-# Load image into Kind
+# Pull and load image into Kind
+echo "Pulling image from Docker Hub..."
+docker pull "$DOCKER_USERNAME/healthcheck-example:latest"
 echo "Loading image into Kind cluster..."
-kind load docker-image healthcheck-example:latest --name healthcheck-cluster
+kind load docker-image "$DOCKER_USERNAME/healthcheck-example:latest" --name healthcheck-cluster
 
 echo "Applying Kubernetes configurations..."
 
