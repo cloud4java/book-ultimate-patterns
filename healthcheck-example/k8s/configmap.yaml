@@ -10,7 +10,7 @@ kind: ConfigMap
 metadata:
   name: healthcheck-config
 data:
-  application.yml: |
+  application.yml: |-
     spring:
       application:
         name: healthcheck-example
